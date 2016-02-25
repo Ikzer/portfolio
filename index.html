@@ -1,33 +1,72 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" >
 <head>
-    <script>document.write('<base href="' + document.location + '" />');</script>
-    <title>Angular 2 Tour of Heroes</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Angular Material: Using a BottomSheet">
 
-    <link rel="stylesheet" href="styles.css">
-    <!-- IE required polyfills, in this exact order -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/es6-shim/0.33.3/es6-shim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/systemjs/0.19.20/system-polyfills.js"></script>
+    <link rel="stylesheet" href="node_modules/angular-material/angular-material.css"/>
+    <link rel="stylesheet" href="css/app.css"/>
 
-    <script src="https://code.angularjs.org/2.0.0-beta.6/angular2-polyfills.js"></script>
-    <script src="https://code.angularjs.org/tools/system.js"></script>
-    <script src="https://code.angularjs.org/tools/typescript.js"></script>
-    <script src="https://code.angularjs.org/2.0.0-beta.6/Rx.js"></script>
-    <script src="https://code.angularjs.org/2.0.0-beta.6/angular2.dev.js"></script>
-    <script src="https://code.angularjs.org/2.0.0-beta.6/router.dev.js"></script>
-    <script>
-        System.config({
-            transpiler: 'typescript',
-            typescriptOptions: { emitDecoratorMetadata: true },
-            packages: {'app': {defaultExtension: 'ts'}}
-        });
-        System.import('app/main')
-                .then(null, console.error.bind(console));
-    </script>
 </head>
+<body ng-app="MyApp" ng-cloak  layout="column" ng-controller="UserController as ul">
 
-<body>
-<my-app>Loading...</my-app>
+<md-toolbar layout="row">
+    <md-button class="menu" ng-click="ul.toggleList();" aria-label="Show User List" hide-gt-sm>
+        <md-icon md-svg-icon="menu"></md-icon>
+    </md-button>
+    <h3>Angular Material Starter</h3>
+</md-toolbar>
+
+<div class="container" layout="row" flex>
+    <md-sidenav md-is-locked-open="$mdMedia('gt-sm')" class="md-whiteframe-4dp" md-component-id="left">
+        <md-list ng-click="ul.toggleList()">
+            <md-list-item ng-repeat="u in ul.users">
+                <md-button ng-click="ul.selectUser(u)" ng-class="{'selected' : u === ul.selected }">
+                    <md-icon md-svg-icon="{{u.avatar}}" class="avatar"></md-icon>
+                    {{u.name}}
+                </md-button>
+            </md-list-item>
+        </md-list>
+    </md-sidenav>
+
+    <md-content id="content" flex>
+        <md-icon md-svg-icon="{{ul.selected.avatar}}" class="avatar"></md-icon>
+        <h2>{{ul.selected.name}}</h2>
+        <p>{{ul.selected.content}}</p>
+
+        <md-button class="share" md-no-ink aria-label="Share with {{ul.selected.name}}" ng-click="ul.makeContact(ul.selected)">
+            <md-icon md-svg-icon="share"></md-icon>
+        </md-button>
+    </md-content>
+</div>
+
+<script src="node_modules/angular/angular.min.js"></script>
+<script src="node_modules/angular-animate/angular-animate.min.js"></script>
+<script src="node_modules/angular-aria/angular-aria.min.js"></script>
+<script src="node_modules/angular-material/angular-material.min.js"></script>
+<script src="js/Users.js"></script>
+<script src="js/UserService.js"></script>
+<script src="js/UserController.js"></script>
+<script>
+    angular
+            .module('MyApp', ['ngMaterial', 'users'])
+            .config(function( $mdIconProvider, $mdThemingProvider ){
+                var rootURL = "https://rawgit.com/angular/material-start/es5-tutorial/app/";
+
+                // Register the user `avatar` icons
+                $mdIconProvider
+                        .defaultIconSet(rootURL + "assets/svg/avatars.svg", 128)
+                        .icon("share"      , rootURL + "assets/svg/share.svg"       , 24)
+                        .icon("google_plus", rootURL + "assets/svg/google_plus.svg" , 512)
+                        .icon("hangouts"   , rootURL + "assets/svg/hangouts.svg"    , 512)
+                        .icon("twitter"    , rootURL + "assets/svg/twitter.svg"     , 512)
+                        .icon("phone"      , rootURL + "assets/svg/phone.svg"       , 512)
+                        .icon("menu"      , rootURL + "assets/svg/menu.svg"       , 512);
+
+                $mdThemingProvider.theme('default')
+                        .primaryPalette('brown')
+                        .accentPalette('red');
+            });
+</script>
+
 </body>
 </html>
